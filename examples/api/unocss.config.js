@@ -1,10 +1,9 @@
-import {
-  defineConfig,
-  presetIcons,
-  presetUno,
-  extractorSvelte,
-  presetWebFonts,
-} from 'unocss'
+// Copyright 2019-2024 Tauri Programme within The Commons Conservancy
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT
+
+import { defineConfig, presetIcons, presetWind3, presetWebFonts } from 'unocss'
+import extractorSvelte from '@unocss/extractor-svelte'
 
 export default defineConfig({
   theme: {
@@ -43,7 +42,6 @@ export default defineConfig({
   },
   preflights: [
     {
-
       getCSS: ({ theme }) => `
     ::-webkit-scrollbar-thumb {
       background-color: ${theme.colors.accent};
@@ -86,13 +84,18 @@ export default defineConfig({
     'note-red':
       'note bg-red-700/10 dark:bg-red-700/10 after:bg-red-700 dark:after:bg-red-700',
     input:
-      'h-10 flex items-center outline-none border-none p-2 rd-1 shadow-md bg-primaryLighter dark:bg-darkPrimaryLighter text-primaryText dark:text-darkPrimaryText',
+      'flex items-center outline-none border-none py-3 px-2 rd-1 shadow-md bg-primaryLighter dark:bg-darkPrimaryLighter text-primaryText dark:text-darkPrimaryText',
+    checkbox: 'accent-accent'
   },
-  presets: [presetUno(), presetIcons(), presetWebFonts({
-    fonts: {
-      sans: 'Rubik',
-      mono: ['Fira Code', 'Fira Mono:400,700'],
-    }
-  })],
+  presets: [
+    presetWind3(),
+    presetIcons(),
+    presetWebFonts({
+      fonts: {
+        sans: 'Rubik',
+        mono: ['Fira Code', 'Fira Mono:400,700']
+      }
+    })
+  ],
   extractors: [extractorSvelte]
 })

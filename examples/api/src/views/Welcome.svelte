@@ -1,10 +1,19 @@
-<script>
-  import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app'
-  import { relaunch, exit } from '@tauri-apps/api/process'
+<script lang="ts">
+  import { invoke } from '@tauri-apps/api/core'
+  import {
+    getName,
+    getVersion,
+    getTauriVersion,
+    getBundleType
+  } from '@tauri-apps/api/app'
+  import type { ViewProps } from '../App.svelte'
 
-  let version = '0.0.0'
-  let tauriVersion = '0.0.0'
-  let appName = 'Unknown'
+  let { onMessage }: ViewProps = $props()
+
+  let version = $state('1.0.0')
+  let tauriVersion = $state('1.0.0')
+  let appName = $state('Unknown')
+  let bundleType = $state('Unknown')
 
   getName().then((n) => {
     appName = n
@@ -15,33 +24,31 @@
   getTauriVersion().then((v) => {
     tauriVersion = v
   })
+  getBundleType().then((b) => {
+    if (b) {
+      bundleType = b
+    }
+  })
 
-  async function closeApp() {
-    await exit()
-  }
-
-  async function relaunchApp() {
-    await relaunch()
+  function contextMenu() {
+    invoke('plugin:app-menu|popup')
   }
 </script>
 
-<p>
-  This is a demo of Tauri's API capabilities using the <code
-    >@tauri-apps/api</code
-  > package. It's used as the main validation app, serving as the test bed of our
-  development process. In the future, this app will be used on Tauri's integration
-  tests.
-</p>
+<div class="grid gap-8 justify-items-start">
+  <p>
+    This is a demo of Tauri's API capabilities using the <code
+      >@tauri-apps/api</code
+    > package. It's used as the main validation app, serving as the test bed of our
+    development process. In the future, this app will be used on Tauri's integration
+    tests.
+  </p>
+  <pre>
+    App name: <code>{appName}</code>
+    App version: <code>{version}</code>
+    Tauri version: <code>{tauriVersion}</code>
+    Bundle type: <code>{bundleType}</code>
+  </pre>
 
-<br />
-<br />
-<pre>
-App name: <code>{appName}</code>
-App version: <code>{version}</code>
-Tauri version: <code>{tauriVersion}</code>
-</pre>
-<br />
-<div class="flex flex-wrap gap-1 shadow-">
-  <button class="btn" on:click={closeApp}>Close application</button>
-  <button class="btn" on:click={relaunchApp}>Relaunch application</button>
+  <button class="btn" onclick={contextMenu}>Context menu</button>
 </div>

@@ -1,47 +1,40 @@
-# Copyright 2019-2021 Tauri Programme within The Commons Conservancy
+# Copyright 2019-2024 Tauri Programme within The Commons Conservancy
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-License-Identifier: MIT
 
-name: api and cli.js lint check
+name: lint js
 
 on:
   pull_request:
     paths:
       - '.github/workflows/lint-js.yml'
-      - 'tooling/cli/node/**'
-      - 'tooling/api/**'
+      - 'packages/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  eslint-check:
+  eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v7
+      - run: npm i -g --force corepack
+      - uses: actions/setup-node@v7
         with:
-          node-version: '14'
-          cache: yarn
-          cache-dependency-path: tooling/*/yarn.lock
-      - name: install cli.js deps via yarn
-        working-directory: ./tooling/cli/node/
-        run: yarn
-      # nothing to lint
-      #- name: run cli.js lint
-      #  working-directory: ./tooling/cli/node/
-      #  run: yarn lint
-      - name: run cli.js format
-        working-directory: ./tooling/cli/node/
-        run: yarn format:check
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm eslint:check
 
-      - name: install api deps via yarn
-        working-directory: ./tooling/api/
-        run: yarn
-      - name: run api lint
-        working-directory: ./tooling/api/
-        run: yarn lint
-      - name: run api format
-        working-directory: ./tooling/api/
-        run: yarn format:check
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: npm i -g --force corepack
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm ts:check
