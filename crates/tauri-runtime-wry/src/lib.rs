@@ -844,8 +844,9 @@ impl WindowBuilder for WindowBuilderWrapper {
       }
     }
 
-    // ignore size from config for mobile for backward compatibility
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    // ignore size from config for iOS for backward compatibility
+    // (F44: Android now supports inner_size via height_fraction + SheetWryActivity)
+    #[cfg(not(target_os = "ios"))]
     {
       window = window.inner_size(config.width, config.height);
     }
