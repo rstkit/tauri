@@ -24,6 +24,14 @@
             </intent-filter>
         </activity>
 
+        <!-- F44: Partial-height bottom sheet Activity (tauri init auto-generates this) -->
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+            android:name=".SheetWryActivity"
+            android:theme="@style/Theme.{{snake-case app.name}}.Dialog"
+            android:excludeFromRecents="true"
+            android:launchMode="standard" />
+
         <provider
           android:name="androidx.core.content.FileProvider"
           android:authorities="${applicationId}.fileprovider"
